@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Alumni Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/alumni}">Alumni Platform</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni}">Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/alumni/new}">Add Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/alumni/profile}">My Profile</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni/mentors}">Mentors</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/events}">Events</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/recommendations}">Recommended Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/admin/pending-users}">Pending Approvals</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+            </ul>
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+                <img th:if="${alumni.photo != null}" th:src="@{/alumni/{id}/photo(id=${alumni.id})}"
+                     class="rounded-circle me-3" style="width:80px;height:80px;object-fit:cover;" alt="Profile photo">
+                <div th:unless="${alumni.photo != null}"
+                     class="rounded-circle bg-lavender d-flex align-items-center justify-content-center me-3"
+                     style="width:80px;height:80px;font-size:1.5rem;">
+                    <span th:text="${#strings.substring(alumni.name, 0, 1)}"></span>
+                </div>
+                <h3 class="mb-0" th:text="${alumni.name}"></h3>
+            </div>
+
+            <form th:if="${canManage}" th:action="@{/alumni/{id}/photo(id=${alumni.id})}" method="post" enctype="multipart/form-data" class="mb-3 d-flex gap-2 align-items-center">
+                <input type="file" name="photo" accept="image/*" class="form-control form-control-sm" style="max-width:280px;">
+                <button type="submit" class="btn btn-sm btn-outline-secondary">Upload Photo</button>
+            </form>
+
+            <dl class="row mt-3">
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9" th:text="${alumni.email}"></dd>
+
+                <dt class="col-sm-3">Batch</dt>
+                <dd class="col-sm-9" th:text="${alumni.batch}"></dd>
+
+                <dt class="col-sm-3">Department</dt>
+                <dd class="col-sm-9" th:text="${alumni.department}"></dd>
+
+                <dt class="col-sm-3">Company</dt>
+                <dd class="col-sm-9" th:text="${alumni.company}"></dd>
+
+                <dt class="col-sm-3">Skills</dt>
+                <dd class="col-sm-9" th:text="${alumni.skills}"></dd>
+
+                <dt class="col-sm-3">LinkedIn</dt>
+                <dd class="col-sm-9" th:text="${alumni.linkedin}"></dd>
+
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9" th:text="${alumni.phone}"></dd>
+            </dl>
+            <a th:href="@{/alumni}" class="btn btn-outline-secondary">Back</a>
+            <a th:if="${canManage}" th:href="@{/alumni/{id}/edit(id=${alumni.id})}" class="btn btn-warning">Edit</a>
+        </div>
+    </div>
+</div>
+<footer class="site-footer text-center py-3 mt-5">
+    <div class="container">
+        <small>&copy; 2026 Alumni Platform. All rights reserved.</small>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,56 @@
+spring:
+  profiles:
+    active: dev
+
+  threads:
+    virtual:
+      enabled: true
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  jackson:
+    time-zone: UTC
+
+server:
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+
+# Secure by default: API docs are opt-in per profile (dev only).
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+app:
+  swagger:
+    public: false
+  jwt:
+    # No default on purpose: the app must fail fast when JWT_SECRET is unset.
+    # The dev profile provides a local-only fallback.
+    secret: ${JWT_SECRET}
+    access-token-expiration-ms: 900000       # 15 minutes
+    refresh-token-expiration-ms: 604800000   # 7 days
+  rate-limit:
+    auth:
+      max-requests: 20
+      window-seconds: 60
+  email-verification:
+    token-expiration-hours: 24
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized

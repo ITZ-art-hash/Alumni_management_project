@@ -1,0 +1,5 @@
+.DS_Store
+*.log
+
+# Project exclude paths
+/target/

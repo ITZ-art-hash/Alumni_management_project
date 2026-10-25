@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/alumni}">Alumni Platform</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni}">Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/alumni/new}">Add Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/alumni/profile}">My Profile</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni/mentors}">Mentors</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/events}">Events</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/recommendations}">Recommended Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/admin/pending-users}">Pending Approvals</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link active" th:href="@{/admin/dashboard}">Dashboard</a></li>
+            </ul>
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Admin Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h6 class="card-title">Total Alumni</h6>
+                    <h2 th:text="${totalAlumni}"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h6 class="card-title">Total Users</h6>
+                    <h2 th:text="${totalUsers}"></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-lavender">
+                <div class="card-body">
+                    <h6 class="card-title">Total Departments</h6>
+                    <h2 th:text="${totalDepartments}"></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Alumni per Department</h5>
+            <canvas id="deptChart" height="100"></canvas>
+        </div>
+    </div>
+</div>
+<footer class="site-footer text-center py-3 mt-5">
+    <div class="container">
+        <small>&copy; 2026 Alumni Platform. All rights reserved.</small>
+    </div>
+</footer>
+
+<script th:inline="javascript">
+    const deptLabels = /*[[${deptLabels}]]*/ [];
+    const deptCounts = /*[[${deptCounts}]]*/ [];
+
+    new Chart(document.getElementById('deptChart'), {
+        type: 'bar',
+        data: {
+            labels: deptLabels,
+            datasets: [{
+                label: 'Alumni Count',
+                data: deptCounts,
+                backgroundColor: '#6a0dad'
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            }
+        }
+    });
+</script>
+</body>
+</html>

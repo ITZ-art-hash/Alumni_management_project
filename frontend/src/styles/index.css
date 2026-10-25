@@ -1,0 +1,101 @@
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #1a202c;
+  background: #f7fafc;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: #1a365d;
+  color: white;
+}
+
+.navbar a { color: #e2e8f0; text-decoration: none; margin-right: 1rem; }
+.navbar a.active { color: white; font-weight: 600; }
+.navbar .brand { font-weight: 700; font-size: 1.1rem; }
+.nav-links { display: flex; align-items: center; gap: 0.75rem; }
+.navbar .muted { color: #a0aec0; }
+
+.card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+}
+
+.card.narrow { max-width: 420px; margin: 3rem auto; }
+.center { text-align: center; }
+
+h1 { font-size: 1.4rem; margin-top: 0; }
+
+form { display: flex; flex-direction: column; gap: 0.9rem; }
+label { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.9rem; font-weight: 500; }
+
+input {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #2b6cb0;
+  color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+button.danger { background: #c53030; }
+
+.error {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 0.6rem 0.9rem;
+  border-radius: 6px;
+}
+
+.success { color: #276749; }
+.muted { color: #718096; font-size: 0.9rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid #e2e8f0; }
+th { color: #4a5568; font-weight: 600; }
+tr.inactive td { color: #a0aec0; }
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.badge.ok { background: #c6f6d5; color: #276749; }
+.badge.warn { background: #fefcbf; color: #975a16; }
+
+.details { display: grid; grid-template-columns: 10rem 1fr; row-gap: 0.7rem; }
+.details dt { color: #4a5568; font-weight: 600; }
+.details dd { margin: 0; }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1rem;
+}

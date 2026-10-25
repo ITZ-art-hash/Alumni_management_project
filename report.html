@@ -1,0 +1,891 @@
+<title>Alumni Platform Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+  :root {
+    --ink: #1a1330;
+    --ink-soft: #382a52;
+    --paper: #faf8fc;
+    --surface: #ffffff;
+    --surface-sunken: #f3effa;
+    --violet: #6a0dad;
+    --violet-deep: #4b0082;
+    --lavender: #ece7fa;
+    --lavender-line: #ddd3f2;
+    --line: #ddd3f2;
+    --muted: #6f6580;
+    --ok: #216b43;
+    --ok-bg: #e3f3e9;
+    --warn: #8a5a12;
+    --warn-bg: #f7ecd9;
+    --danger: #a3241d;
+    --danger-bg: #f8e4e2;
+    --code-bg: #211a35;
+    --code-ink: #e7defb;
+    --code-accent: #c9a8f5;
+    --shadow: 0 1px 2px rgba(26,19,48,0.06), 0 8px 24px -12px rgba(106,13,173,0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece5fb;
+      --ink-soft: #cabde8;
+      --paper: #120e1e;
+      --surface: #1a1530;
+      --surface-sunken: #221c3a;
+      --violet: #b892f0;
+      --violet-deep: #d8c4fb;
+      --lavender: #2a2344;
+      --lavender-line: #392f56;
+      --line: #392f56;
+      --muted: #a89bc7;
+      --ok: #7fd9a3;
+      --ok-bg: #17301f;
+      --warn: #e0b45c;
+      --warn-bg: #332508;
+      --danger: #f2938c;
+      --danger-bg: #351515;
+      --code-bg: #0d0a18;
+      --code-ink: #e7defb;
+      --code-accent: #d8bff8;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #ece5fb;
+    --ink-soft: #cabde8;
+    --paper: #120e1e;
+    --surface: #1a1530;
+    --surface-sunken: #221c3a;
+    --violet: #b892f0;
+    --violet-deep: #d8c4fb;
+    --lavender: #2a2344;
+    --lavender-line: #392f56;
+    --line: #392f56;
+    --muted: #a89bc7;
+    --ok: #7fd9a3;
+    --ok-bg: #17301f;
+    --warn: #e0b45c;
+    --warn-bg: #332508;
+    --danger: #f2938c;
+    --danger-bg: #351515;
+    --code-bg: #0d0a18;
+    --code-ink: #e7defb;
+    --code-accent: #d8bff8;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Public Sans', -apple-system, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Fraunces', Georgia, serif;
+    color: var(--ink);
+    font-weight: 620;
+    text-wrap: balance;
+    line-height: 1.15;
+    margin: 0;
+  }
+  code, .mono, .mono * { font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+  a { color: var(--violet); }
+  a:hover { color: var(--violet-deep); }
+
+  .shell {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 56px) 120px;
+  }
+
+  /* ---------- cover ---------- */
+  .cover {
+    padding: 64px 0 40px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 8px;
+  }
+  .cover .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--violet);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .cover .eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--violet);
+  }
+  .cover h1 {
+    font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+    max-width: 16ch;
+  }
+  .cover .sub {
+    margin-top: 14px;
+    max-width: 62ch;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+  }
+  .cover .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+  .chip {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--lavender);
+    color: var(--violet-deep);
+    border: 1px solid var(--lavender-line);
+    white-space: nowrap;
+  }
+  .cover .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 32px;
+    max-width: 720px;
+  }
+  .cover .stat {
+    background: var(--surface);
+    padding: 16px 18px;
+  }
+  .cover .stat b {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-size: 1.9rem;
+    font-weight: 640;
+    font-variant-numeric: tabular-nums;
+    color: var(--violet);
+  }
+  .cover .stat span {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  /* ---------- layout: rail + content ---------- */
+  .layout {
+    display: grid;
+    grid-template-columns: 232px minmax(0,1fr);
+    gap: 56px;
+    padding-top: 36px;
+    align-items: start;
+  }
+  nav.toc {
+    position: sticky;
+    top: 28px;
+    font-size: 13.5px;
+  }
+  nav.toc .toc-title {
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; }
+  nav.toc li { margin: 0; }
+  nav.toc a {
+    display: block;
+    padding: 6px 0 6px 14px;
+    border-left: 1px solid var(--line);
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  nav.toc a:hover { color: var(--violet); border-left-color: var(--violet); }
+  nav.toc .sub-list a { padding-left: 26px; font-size: 12.5px; color: var(--muted); }
+
+  main { min-width: 0; }
+  section { padding-top: 8px; margin-bottom: 64px; scroll-margin-top: 24px; }
+  section > .num-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  section > .num-head .n {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--violet);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  section > .num-head h2 { font-size: 1.7rem; }
+  .subsection { margin-top: 36px; }
+  .subsection .num-head h3 { font-size: 1.25rem; }
+  .subsection .num-head .n { font-size: 12.5px; }
+
+  p { max-width: 72ch; color: var(--ink-soft); }
+  p.lead { font-size: 1.05rem; color: var(--ink); }
+  ul.plain, ol.plain { max-width: 72ch; color: var(--ink-soft); padding-left: 1.2em; }
+  ul.plain li, ol.plain li { margin-bottom: 6px; }
+
+  /* ---------- cards / feature grid ---------- */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+  }
+  .feature-card .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--violet);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .feature-card h4 { font-size: 1.05rem; margin-bottom: 8px; }
+  .feature-card p { font-size: 14px; margin: 0; }
+
+  /* ---------- tables ---------- */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 560px; }
+  thead th {
+    text-align: left;
+    background: var(--lavender);
+    color: var(--violet-deep);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-soft);
+    vertical-align: top;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: var(--surface-sunken); }
+  td.mono, th.mono { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--ink); }
+  td.center { text-align: center; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11.5px; font-family: 'IBM Plex Mono', monospace; font-weight: 600; }
+  .pill.get { background: var(--ok-bg); color: var(--ok); }
+  .pill.post { background: var(--warn-bg); color: var(--warn); }
+  .pill.admin { background: var(--danger-bg); color: var(--danger); }
+  .pill.any { background: var(--lavender); color: var(--violet-deep); }
+  .yes { color: var(--ok); font-weight: 700; }
+  .no { color: var(--muted); }
+  .owner { color: var(--violet); font-weight: 600; }
+
+  /* ---------- diagrams ---------- */
+  .diagram-frame {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    overflow-x: auto;
+  }
+  .diagram-frame svg { display: block; margin: 0 auto; min-width: 560px; }
+  .diagram-caption { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+  /* ---------- file tree ---------- */
+  .tree {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px 22px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--ink-soft);
+    overflow-x: auto;
+  }
+  .tree .dir { color: var(--violet); font-weight: 600; }
+  .tree .cmt { color: var(--muted); }
+
+  /* ---------- field-notes / debug log ---------- */
+  .log {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    border-radius: 14px;
+    padding: 4px 0;
+    box-shadow: var(--shadow);
+  }
+  .log-entry { padding: 22px 26px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .log-entry:last-child { border-bottom: none; }
+  .log-entry .log-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--code-accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .log-entry .log-head .idx {
+    background: rgba(201,168,245,0.16);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+  .log-entry h4 { color: var(--code-ink); font-size: 1.02rem; margin-bottom: 10px; font-family: 'Fraunces', serif; }
+  .log-entry p { color: #cabde8; font-size: 14px; max-width: 74ch; margin: 0 0 8px; }
+  .log-entry .trace {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    background: rgba(0,0,0,0.28);
+    border-left: 2px solid var(--code-accent);
+    padding: 10px 14px;
+    border-radius: 6px;
+    color: #f2938c;
+    margin: 10px 0;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .log-entry .fix {
+    font-size: 13px;
+    color: var(--code-ink);
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .log-entry .fix .lbl { color: #7fd9a3; font-family: 'IBM Plex Mono', monospace; font-weight: 600; flex-shrink: 0; }
+
+  /* ---------- callouts ---------- */
+  .callout {
+    border-left: 3px solid var(--violet);
+    background: var(--lavender);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 72ch;
+  }
+  .callout b { color: var(--violet-deep); }
+
+  footer.report-footer {
+    border-top: 1px solid var(--line);
+    margin-top: 40px;
+    padding-top: 24px;
+    font-size: 12.5px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; margin-bottom: 8px; }
+    nav.toc ol { display: none; }
+  }
+</style>
+
+<div class="shell">
+
+  <div class="cover">
+    <div class="eyebrow">Software Engineering Report</div>
+    <h1>Alumni Platform</h1>
+    <p class="sub">A session-authenticated alumni management system built with Spring Boot 4.1, Java 25, and server-rendered Thymeleaf — covering directory management, self-service profiles, events, a job board, and admin moderation.</p>
+    <div class="meta-row">
+      <span class="chip">Spring Boot 4.1.0</span>
+      <span class="chip">Java 25</span>
+      <span class="chip">Spring Security 7.1</span>
+      <span class="chip">PostgreSQL 17</span>
+      <span class="chip">Thymeleaf 3.1</span>
+      <span class="chip">com.alumni.platform</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><b>4</b><span>Entities</span></div>
+      <div class="stat"><b>5</b><span>Controllers</span></div>
+      <div class="stat"><b>27</b><span>Endpoints</span></div>
+      <div class="stat"><b>15</b><span>Templates</span></div>
+      <div class="stat"><b>2</b><span>Roles</span></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="toc">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#summary">1. Executive summary</a></li>
+        <li><a href="#stack">2. Technology stack</a></li>
+        <li><a href="#architecture">3. System architecture</a>
+          <ol class="sub-list">
+            <li><a href="#arch-layers">3.1 Layered overview</a></li>
+            <li><a href="#arch-tree">3.2 Project structure</a></li>
+          </ol>
+        </li>
+        <li><a href="#data-model">4. Data model</a>
+          <ol class="sub-list">
+            <li><a href="#er">4.1 Entity relationships</a></li>
+            <li><a href="#fields">4.2 Field reference</a></li>
+          </ol>
+        </li>
+        <li><a href="#security">5. Security &amp; access control</a>
+          <ol class="sub-list">
+            <li><a href="#auth">5.1 Authentication model</a></li>
+            <li><a href="#matrix">5.2 Permission matrix</a></li>
+          </ol>
+        </li>
+        <li><a href="#features">6. Feature catalog</a></li>
+        <li><a href="#endpoints">7. Endpoint reference</a></li>
+        <li><a href="#fieldnotes">8. Engineering field notes</a></li>
+        <li><a href="#setup">9. Running the project</a></li>
+        <li><a href="#roadmap">10. Limitations &amp; roadmap</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <section id="summary">
+        <div class="num-head"><span class="n">01</span><h2>Executive summary</h2></div>
+        <p class="lead">The Alumni Platform is a server-rendered CRUD application for maintaining a college alumni directory, seeded with 12 sample graduates spanning batches 2015&ndash;2024 across four departments. It began as a minimal login-and-directory app and grew, over the course of development, into a small campus network: alumni can self-manage their own profile, RSVP to reunions, post job referrals, and search each other out as mentors &mdash; while a single admin account moderates new signups, the master directory, and events.</p>
+        <p>Every screen is rendered server-side through Thymeleaf; there is no separate frontend build. Authorization is enforced twice over &mdash; once at the URL level in <code>SecurityConfig</code>, and again inside individual controller methods wherever a rule is more specific than "any authenticated user" or "admins only" (for instance, <em>you may edit this record only if it's yours</em>).</p>
+      </section>
+
+      <section id="stack">
+        <div class="num-head"><span class="n">02</span><h2>Technology stack</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Layer</th><th>Choice</th><th>Version</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Language / runtime</td><td class="mono">Java</td><td class="mono">25 (LTS)</td><td>Compiled with <code>--release 25</code></td></tr>
+              <tr><td>Application framework</td><td class="mono">Spring Boot</td><td class="mono">4.1.0</td><td>Spring Framework 7.0.8 underneath</td></tr>
+              <tr><td>Security</td><td class="mono">Spring Security</td><td class="mono">7.1.0</td><td>Lambda DSL only, no deprecated APIs</td></tr>
+              <tr><td>Persistence</td><td class="mono">Spring Data JPA / Hibernate ORM</td><td class="mono">7.4.1.Final</td><td><code>ddl-auto=update</code>, no Flyway</td></tr>
+              <tr><td>Database</td><td class="mono">PostgreSQL</td><td class="mono">17</td><td>Driver 42.7.11 &middot; DB <code>alumni_db</code></td></tr>
+              <tr><td>View layer</td><td class="mono">Thymeleaf</td><td class="mono">3.1.5</td><td>+ thymeleaf-extras-springsecurity6 for <code>sec:authorize</code></td></tr>
+              <tr><td>Validation</td><td class="mono">Hibernate Validator</td><td class="mono">9.1.0.Final</td><td>Jakarta Bean Validation on entities</td></tr>
+              <tr><td>Boilerplate</td><td class="mono">Lombok</td><td class="mono">1.18.46</td><td><code>@Data @Builder @NoArgsConstructor @AllArgsConstructor</code></td></tr>
+              <tr><td>CSS framework</td><td class="mono">Bootstrap</td><td class="mono">5.3.3</td><td>CDN &middot; overridden by a custom violet/lavender theme</td></tr>
+              <tr><td>Charts</td><td class="mono">Chart.js</td><td class="mono">4.4.4</td><td>CDN &middot; admin dashboard bar chart</td></tr>
+              <tr><td>Build tool</td><td class="mono">Maven (wrapper)</td><td class="mono">3.9.12</td><td><code>mvnw</code> / <code>mvnw.cmd</code> checked in</td></tr>
+              <tr><td>IDE / tooling</td><td class="mono">IntelliJ IDEA + pgAdmin</td><td class="mono">&mdash;</td><td>Backend dev &amp; DB inspection</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="architecture">
+        <div class="num-head"><span class="n">03</span><h2>System architecture</h2></div>
+
+        <div class="subsection" id="arch-layers">
+          <div class="num-head"><span class="n">3.1</span><h3>Layered overview</h3></div>
+          <p>A conventional Spring MVC layering, with Spring Security's filter chain sitting in front of every request and method-level <code>@PreAuthorize</code> checks living inside the controller layer alongside manual ownership checks that URL rules alone can't express.</p>
+          <div class="diagram-frame">
+            <svg viewBox="0 0 920 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Layered architecture diagram">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"></path>
+                </marker>
+              </defs>
+              <!-- security band -->
+              <rect x="20" y="20" width="880" height="46" rx="10" style="fill:var(--lavender);stroke:var(--lavender-line)"></rect>
+              <text x="460" y="48" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:13px;fill:var(--violet-deep);font-weight:600">Spring Security filter chain &nbsp;&middot;&nbsp; session auth, CSRF, @PreAuthorize, ownership checks</text>
+
+              <!-- boxes row -->
+              <g style="font-family:'Fraunces',serif;font-weight:600;font-size:15px">
+                <rect x="20"  y="110" width="150" height="80" rx="10" style="fill:var(--surface);stroke:var(--line)"></rect>
+                <text x="95" y="145" text-anchor="middle" style="fill:var(--ink)">Browser</text>
+                <text x="95" y="165" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;fill:var(--muted)">Bootstrap 5 UI</text>
+
+                <rect x="205" y="110" width="150" height="80" rx="10" style="fill:var(--surface);stroke:var(--line)"></rect>
+                <text x="280" y="145" text-anchor="middle" style="fill:var(--ink)">Templates</text>
+                <text x="280" y="165" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;fill:var(--muted)">15 Thymeleaf views</text>
+
+                <rect x="390" y="110" width="150" height="80" rx="10" style="fill:var(--surface);stroke:var(--line)"></rect>
+                <text x="465" y="145" text-anchor="middle" style="fill:var(--ink)">Controllers</text>
+                <text x="465" y="165" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;fill:var(--muted)">5 &commat;Controller</text>
+
+                <rect x="575" y="110" width="150" height="80" rx="10" style="fill:var(--surface);stroke:var(--line)"></rect>
+                <text x="650" y="145" text-anchor="middle" style="fill:var(--ink)">Services</text>
+                <text x="650" y="165" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;fill:var(--muted)">4 &commat;Service</text>
+
+                <rect x="760" y="110" width="140" height="80" rx="10" style="fill:var(--violet);stroke:var(--violet)"></rect>
+                <text x="830" y="145" text-anchor="middle" style="fill:#fff">PostgreSQL</text>
+                <text x="830" y="165" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:400;fill:#ece5fb">alumni_db</text>
+              </g>
+
+              <!-- arrows -->
+              <line x1="170" y1="150" x2="203" y2="150" style="stroke:var(--muted);stroke-width:1.5" marker-end="url(#arrow)"></line>
+              <line x1="355" y1="150" x2="388" y2="150" style="stroke:var(--muted);stroke-width:1.5" marker-end="url(#arrow)"></line>
+              <line x1="540" y1="150" x2="573" y2="150" style="stroke:var(--muted);stroke-width:1.5" marker-end="url(#arrow)"></line>
+              <line x1="725" y1="150" x2="758" y2="150" style="stroke:var(--muted);stroke-width:1.5" marker-end="url(#arrow)"></line>
+
+              <!-- repository label under services->db -->
+              <text x="742" y="215" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--muted)">4 Spring Data repositories</text>
+
+              <!-- return path -->
+              <path d="M465,190 C465,240 280,240 280,192" style="fill:none;stroke:var(--lavender-line);stroke-width:1.5;stroke-dasharray:3,3" marker-end="url(#arrow)"></path>
+              <text x="372" y="262" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--muted)">Model &rarr; rendered HTML response</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">Fig. 1 &mdash; Request flow through the application. Controllers depend only on services; services depend only on repositories; nothing skips a layer.</p>
+        </div>
+
+        <div class="subsection" id="arch-tree">
+          <div class="num-head"><span class="n">3.2</span><h3>Project structure</h3></div>
+          <p>All application code lives under a single Maven module at the repository root (a separate, unrelated <code>backend/</code> + <code>frontend/</code> starter project happens to share the parent folder and is not part of this system).</p>
+          <div class="tree">
+<span class="dir">com.alumni.platform</span>/<br>
+&nbsp;&nbsp;AlumniPlatformApplication.java <span class="cmt">// @SpringBootApplication entry point</span><br>
+&nbsp;&nbsp;<span class="dir">config/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;SecurityConfig.java <span class="cmt">// filter chain, BCrypt, failure handler</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;DataInitializer.java <span class="cmt">// CommandLineRunner seed data</span><br>
+&nbsp;&nbsp;<span class="dir">entity/</span> <span class="cmt">// User, Alumni, Event, JobPosting, Role</span><br>
+&nbsp;&nbsp;<span class="dir">repository/</span> <span class="cmt">// 4 × JpaRepository interfaces</span><br>
+&nbsp;&nbsp;<span class="dir">service/</span> <span class="cmt">// UserService, AlumniService, EventService, JobPostingService</span><br>
+&nbsp;&nbsp;<span class="dir">controller/</span> <span class="cmt">// AuthController, AlumniController, EventController,</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cmt">// JobPostingController, AdminController</span><br>
+<span class="dir">resources/</span><br>
+&nbsp;&nbsp;application.properties<br>
+&nbsp;&nbsp;<span class="dir">static/css/</span>theme.css <span class="cmt">// black / violet / lavender design tokens</span><br>
+&nbsp;&nbsp;<span class="dir">templates/</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;login.html &middot; register.html &middot; error.html<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">alumni/</span> list, form, view, mentors<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">events/</span> list, form, view<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">jobs/</span> list, form, view<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="dir">admin/</span> dashboard, pending-users
+          </div>
+        </div>
+      </section>
+
+      <section id="data-model">
+        <div class="num-head"><span class="n">04</span><h2>Data model</h2></div>
+
+        <div class="subsection" id="er">
+          <div class="num-head"><span class="n">4.1</span><h3>Entity relationships</h3></div>
+          <p>There are no foreign keys between <code>users</code> and <code>alumni</code> &mdash; a login account and a directory record are linked only by matching <strong>email address</strong> at the application layer. This was a deliberate simplification: <code>AlumniController.profile()</code> looks up an alumni row by the signed-in user's email on every visit to "My Profile" rather than storing a hard reference.</p>
+          <div class="diagram-frame">
+            <svg viewBox="0 0 940 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Entity relationship diagram">
+              <!-- User -->
+              <g>
+                <rect x="20" y="20" width="220" height="168" rx="10" style="fill:var(--surface);stroke:var(--violet);stroke-width:1.5"></rect>
+                <rect x="20" y="20" width="220" height="34" rx="10" style="fill:var(--violet)"></rect>
+                <rect x="20" y="40" width="220" height="14" style="fill:var(--violet)"></rect>
+                <text x="130" y="42" text-anchor="middle" style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;fill:#fff">User</text>
+                <g style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;fill:var(--ink-soft)">
+                  <text x="34" y="76">id : Long (PK)</text>
+                  <text x="34" y="96">email : String (unique)</text>
+                  <text x="34" y="116">password : String (BCrypt)</text>
+                  <text x="34" y="136">role : ADMIN | ALUMNI</text>
+                  <text x="34" y="156">approved : boolean</text>
+                </g>
+              </g>
+
+              <!-- Alumni -->
+              <g>
+                <rect x="20" y="228" width="220" height="188" rx="10" style="fill:var(--surface);stroke:var(--line);stroke-width:1.5"></rect>
+                <rect x="20" y="228" width="220" height="34" rx="10" style="fill:var(--ink)"></rect>
+                <rect x="20" y="248" width="220" height="14" style="fill:var(--ink)"></rect>
+                <text x="130" y="250" text-anchor="middle" style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;fill:#fff">Alumni</text>
+                <g style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--ink-soft)">
+                  <text x="34" y="282">id, name, email (unique)</text>
+                  <text x="34" y="300">batch : int [1950&ndash;2100]</text>
+                  <text x="34" y="318">department, company, skills</text>
+                  <text x="34" y="336">linkedin, phone</text>
+                  <text x="34" y="354">photo : byte[] (bytea)</text>
+                  <text x="34" y="372">photoContentType : String</text>
+                </g>
+              </g>
+
+              <!-- dashed relation -->
+              <path d="M240,104 C 320,104 320,244 240,272" style="fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:4,4"></path>
+              <text x="270" y="188" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;fill:var(--muted)">matched by</text>
+              <text x="270" y="200" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;fill:var(--muted)">email, not FK</text>
+
+              <!-- Event -->
+              <g>
+                <rect x="360" y="20" width="230" height="150" rx="10" style="fill:var(--surface);stroke:var(--line);stroke-width:1.5"></rect>
+                <rect x="360" y="20" width="230" height="34" rx="10" style="fill:var(--violet-deep)"></rect>
+                <rect x="360" y="40" width="230" height="14" style="fill:var(--violet-deep)"></rect>
+                <text x="475" y="42" text-anchor="middle" style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;fill:#fff">Event</text>
+                <g style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--ink-soft)">
+                  <text x="374" y="76">id, title, description</text>
+                  <text x="374" y="94">eventDate : LocalDate</text>
+                  <text x="374" y="112">location : String</text>
+                  <text x="374" y="130">attendees : Set&lt;String&gt;</text>
+                  <text x="374" y="148" style="fill:var(--muted)">&rarr; event_attendees table</text>
+                </g>
+              </g>
+
+              <!-- JobPosting -->
+              <g>
+                <rect x="360" y="200" width="230" height="150" rx="10" style="fill:var(--surface);stroke:var(--line);stroke-width:1.5"></rect>
+                <rect x="360" y="200" width="230" height="34" rx="10" style="fill:var(--violet-deep)"></rect>
+                <rect x="360" y="220" width="230" height="14" style="fill:var(--violet-deep)"></rect>
+                <text x="475" y="222" text-anchor="middle" style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;fill:#fff">JobPosting</text>
+                <g style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--ink-soft)">
+                  <text x="374" y="256">id, title, company</text>
+                  <text x="374" y="274">description, contactInfo</text>
+                  <text x="374" y="292">postedByEmail : String</text>
+                  <text x="374" y="310">postedDate : LocalDate</text>
+                </g>
+              </g>
+
+              <path d="M240,120 C 300,120 300,95 358,95" style="fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:4,4"></path>
+              <path d="M240,150 C 300,150 300,275 358,275" style="fill:none;stroke:var(--muted);stroke-width:1.5;stroke-dasharray:4,4"></path>
+
+              <!-- attendee join table -->
+              <g>
+                <rect x="640" y="60" width="260" height="70" rx="10" style="fill:var(--lavender);stroke:var(--lavender-line)"></rect>
+                <text x="770" y="84" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:12px;fill:var(--violet-deep)">event_attendees</text>
+                <text x="770" y="104" text-anchor="middle" style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--ink-soft)">event_id, attendee_email</text>
+              </g>
+              <line x1="590" y1="95" x2="638" y2="95" style="stroke:var(--muted);stroke-width:1.5"></line>
+
+              <text x="440" y="400" style="font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--muted)">Dashed lines: application-level association by email string, not a database foreign key.</text>
+            </svg>
+          </div>
+          <p class="diagram-caption">Fig. 2 &mdash; The four persistent entities. Only <code>Event.attendees</code> uses a real join table (<code>@ElementCollection</code>); every other cross-entity link is a plain email string.</p>
+        </div>
+
+        <div class="subsection" id="fields">
+          <div class="num-head"><span class="n">4.2</span><h3>Field reference &amp; validation</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Entity</th><th>Field</th><th>Type</th><th>Constraint</th></tr></thead>
+              <tbody>
+                <tr><td rowspan="5">User</td><td class="mono">email</td><td class="mono">String</td><td>@NotBlank, @Email, unique</td></tr>
+                <tr><td class="mono">password</td><td class="mono">String</td><td>@NotBlank, @Size(min=6) &middot; stored BCrypt-hashed</td></tr>
+                <tr><td class="mono">role</td><td class="mono">enum</td><td>ADMIN or ALUMNI</td></tr>
+                <tr><td class="mono">approved</td><td class="mono">boolean</td><td>gates login via <code>UserDetails.disabled</code></td></tr>
+                <tr><td class="mono">id</td><td class="mono">Long</td><td>identity PK</td></tr>
+                <tr><td rowspan="6">Alumni</td><td class="mono">name</td><td class="mono">String</td><td>@NotBlank</td></tr>
+                <tr><td class="mono">email</td><td class="mono">String</td><td>@NotBlank, @Email, unique</td></tr>
+                <tr><td class="mono">batch</td><td class="mono">int</td><td>@Min(1950), @Max(2100)</td></tr>
+                <tr><td class="mono">department</td><td class="mono">String</td><td>@NotBlank &middot; CSE / ECE / ME / CE in the UI</td></tr>
+                <tr><td class="mono">skills</td><td class="mono">String</td><td>free-text, comma-separated</td></tr>
+                <tr><td class="mono">photo</td><td class="mono">byte[]</td><td>@Lob &middot; nullable, stored inline as bytea</td></tr>
+                <tr><td rowspan="2">Event</td><td class="mono">title</td><td class="mono">String</td><td>@NotBlank</td></tr>
+                <tr><td class="mono">eventDate</td><td class="mono">LocalDate</td><td>@NotNull</td></tr>
+                <tr><td rowspan="2">JobPosting</td><td class="mono">title</td><td class="mono">String</td><td>@NotBlank</td></tr>
+                <tr><td class="mono">company</td><td class="mono">String</td><td>@NotBlank</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="security">
+        <div class="num-head"><span class="n">05</span><h2>Security &amp; access control</h2></div>
+
+        <div class="subsection" id="auth">
+          <div class="num-head"><span class="n">5.1</span><h3>Authentication model</h3></div>
+          <ul class="plain">
+            <li><strong>Session-based form login</strong> &mdash; no JWT. <code>SecurityConfig</code> is built entirely with the Spring Security 7 lambda DSL (<code>authorizeHttpRequests</code>, <code>formLogin</code>, <code>logout</code>); no deprecated <code>WebSecurityConfigurerAdapter</code> or chained <code>.and()</code> calls.</li>
+            <li><strong>Passwords</strong> are hashed with <code>BCryptPasswordEncoder</code> before every save; the raw value never touches the database.</li>
+            <li><strong>CSRF protection</strong> is on by default. Because every form uses Thymeleaf's <code>th:action</code>, Spring's <code>CsrfRequestDataValueProcessor</code> silently injects the hidden <code>_csrf</code> token &mdash; no template had to reference it explicitly.</li>
+            <li><strong>Registration approval gate:</strong> a new <code>User</code> is created with <code>approved = false</code>. <code>UserService.loadUserByUsername()</code> maps that straight onto Spring Security's <code>UserDetails.disabled</code> flag, so an unapproved account authenticates correctly but is rejected with a <code>DisabledException</code>. A custom <code>AuthenticationFailureHandler</code> tells that apart from a wrong password, redirecting to <code>/login?disabled</code> instead of the generic <code>/login?error</code>.</li>
+          </ul>
+        </div>
+
+        <div class="subsection" id="matrix">
+          <div class="num-head"><span class="n">5.2</span><h3>Permission matrix</h3></div>
+          <p>Two enforcement mechanisms are layered: a coarse URL rule in <code>SecurityConfig</code> (<code>/admin/**</code> requires <code>ROLE_ADMIN</code>; everything else just requires <em>authenticated</em>), and finer <code>@PreAuthorize</code> / manual <code>AccessDeniedException</code> checks inside controllers for anything ownership-shaped.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Action</th><th class="center">Guest</th><th class="center">Alumni</th><th class="center">Admin</th></tr></thead>
+              <tbody>
+                <tr><td>Browse directory, search, view a profile</td><td class="center no">&mdash;</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+                <tr><td>Create / edit own alumni profile</td><td class="center no">&mdash;</td><td class="center owner">own only</td><td class="center yes">any</td></tr>
+                <tr><td>Upload profile photo</td><td class="center no">&mdash;</td><td class="center owner">own only</td><td class="center yes">any</td></tr>
+                <tr><td>Add / delete a directory record, export CSV</td><td class="center no">&mdash;</td><td class="center no">✗</td><td class="center yes">✓</td></tr>
+                <tr><td>View events, RSVP / cancel</td><td class="center no">&mdash;</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+                <tr><td>Create / delete an event</td><td class="center no">&mdash;</td><td class="center no">✗</td><td class="center yes">✓</td></tr>
+                <tr><td>View job board, post a listing</td><td class="center no">&mdash;</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+                <tr><td>Delete a job listing</td><td class="center no">&mdash;</td><td class="center owner">own only</td><td class="center yes">any</td></tr>
+                <tr><td>Admin dashboard &amp; pending-user approval</td><td class="center no">&mdash;</td><td class="center no">✗</td><td class="center yes">✓</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="features">
+        <div class="num-head"><span class="n">06</span><h2>Feature catalog</h2></div>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <span class="tag">Directory</span>
+            <h4>Combined search &amp; pagination</h4>
+            <p>Batch, department, and skill filters combine in a single JPQL query (<code>AlumniRepository.search</code>), 10 results per page, sorted by name.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Self-service</span>
+            <h4>My Profile</h4>
+            <p>An approved alumni account can create exactly one directory record and edit only that record &mdash; the server silently overwrites any submitted email back to the signer's own, so identity can't be spoofed through the form.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Self-service</span>
+            <h4>Profile photo</h4>
+            <p>Uploaded via multipart form, stored as raw bytes in Postgres, streamed back through a dedicated <code>image/*</code> endpoint &mdash; no filesystem or object storage dependency.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Directory</span>
+            <h4>Find a mentor</h4>
+            <p>Free-text, case-insensitive search across the comma-separated <code>skills</code> field.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Community</span>
+            <h4>Events &amp; RSVP</h4>
+            <p>Admin-created reunions; any alumni can RSVP or cancel. Attendance is a plain set of email strings, rendered live on the event page.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Community</span>
+            <h4>Job &amp; referral board</h4>
+            <p>Any approved alumni can post an opening; only the original poster (or an admin) can take it down &mdash; the delete button itself is hidden from everyone else, not just blocked server-side.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Admin</span>
+            <h4>Registration approval queue</h4>
+            <p>New signups sit disabled until an admin approves them from <code>/admin/pending-users</code>, closing the open-self-registration gap the app started with.</p>
+          </div>
+          <div class="feature-card">
+            <span class="tag">Admin</span>
+            <h4>Dashboard &amp; CSV export</h4>
+            <p>Live counts (alumni, users, departments) plus a Chart.js bar chart of alumni-per-department; one-click CSV export of the full directory.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="endpoints">
+        <div class="num-head"><span class="n">07</span><h2>Endpoint reference</h2></div>
+        <p>All 27 mapped routes, grouped by controller. <span class="pill any">any</span> = any authenticated user &middot; <span class="pill admin">admin</span> = <code>ROLE_ADMIN</code> only &middot; <span class="pill post">owner</span> = admin or the record's own email.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Method</th><th>Path</th><th>Access</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/register</td><td><span class="pill any">public</span></td><td>Registration form</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/register</td><td><span class="pill any">public</span></td><td>Create account, role=ALUMNI, approved=false</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/login</td><td><span class="pill any">public</span></td><td>Login form</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni</td><td><span class="pill any">any</span></td><td>Directory list &middot; search &amp; pagination</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/export</td><td><span class="pill admin">admin</span></td><td>Stream directory as CSV</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/new</td><td><span class="pill admin">admin</span></td><td>Blank creation form</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/profile</td><td><span class="pill any">any</span></td><td>Redirect to own edit, or blank form pre-filled with own email</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/alumni</td><td><span class="pill post">owner</span></td><td>Create or update &middot; ownership + validation enforced</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/{id}</td><td><span class="pill any">any</span></td><td>Read-only profile view</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/alumni/{id}/photo</td><td><span class="pill post">owner</span></td><td>Upload profile photo (multipart)</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/{id}/photo</td><td><span class="pill any">any</span></td><td>Stream photo bytes</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/{id}/edit</td><td><span class="pill post">owner</span></td><td>Pre-filled edit form</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/alumni/{id}/delete</td><td><span class="pill admin">admin</span></td><td>Remove a record</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/alumni/mentors</td><td><span class="pill any">any</span></td><td>Skill-based mentor search</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/events</td><td><span class="pill any">any</span></td><td>Event list, sorted by date</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/events/new</td><td><span class="pill admin">admin</span></td><td>Creation form</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/events</td><td><span class="pill admin">admin</span></td><td>Create event</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/events/{id}</td><td><span class="pill any">any</span></td><td>Event detail + attendee list</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/events/{id}/rsvp</td><td><span class="pill any">any</span></td><td>Add self to attendees</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/events/{id}/cancel-rsvp</td><td><span class="pill any">any</span></td><td>Remove self from attendees</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/events/{id}/delete</td><td><span class="pill admin">admin</span></td><td>Remove an event</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/jobs</td><td><span class="pill any">any</span></td><td>Job board, newest first</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/jobs/new</td><td><span class="pill any">any</span></td><td>Posting form</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/jobs</td><td><span class="pill any">any</span></td><td>Create listing &middot; author + date set server-side</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/jobs/{id}</td><td><span class="pill any">any</span></td><td>Listing detail</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/jobs/{id}/delete</td><td><span class="pill post">owner</span></td><td>Remove own listing</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/admin/dashboard</td><td><span class="pill admin">admin</span></td><td>Stats + department chart</td></tr>
+              <tr><td class="mono"><span class="pill get">GET</span></td><td class="mono">/admin/pending-users</td><td><span class="pill admin">admin</span></td><td>Unapproved account queue</td></tr>
+              <tr><td class="mono"><span class="pill post">POST</span></td><td class="mono">/admin/users/{id}/approve</td><td><span class="pill admin">admin</span></td><td>Approve an account</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="fieldnotes">
+        <div class="num-head"><span class="n">08</span><h2>Engineering field notes</h2></div>
+        <p>A record of the real problems hit during development &mdash; kept because each one changed something in the final codebase, not as a post-mortem gloss.</p>
+        <div class="log">
+          <div class="log-entry">
+            <div class="log-head"><span class="idx">01</span> build &middot; lombok</div>
+            <h4>Lombok silently stopped generating code on JDK 25</h4>
+            <p>Compiling with Maven produced <code>cannot find symbol: method builder()</code> and <code>getX()/setX()</code> errors across every entity, with no annotation-processor warning at all &mdash; the classic symptom of a processor that never ran.</p>
+            <div class="trace">[ERROR] DataInitializer.java: cannot find symbol
+  symbol:   method builder()
+  location: class User</div>
+            <div class="fix"><span class="lbl">root cause</span>&nbsp; maven-compiler-plugin's default in-process compilation adds <code>-XDuseUnsharedTable=true</code>, which breaks Lombok's javac AST patching without raising an error.</div>
+            <div class="fix"><span class="lbl">fix</span>&nbsp; forced <code>&lt;fork&gt;true&lt;/fork&gt;</code> and pinned Lombok explicitly via <code>&lt;annotationProcessorPaths&gt;</code> in <code>pom.xml</code>.</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-head"><span class="idx">02</span> environment &middot; java_home</div>
+            <h4>System JAVA_HOME pointed at a path that didn't exist</h4>
+            <p><code>JAVA_HOME</code> was set to <code>...\Java\jdk-25\bin</code>; the real install lived at <code>...\Java\jdk-25.0.3</code> (no <code>bin</code> suffix). Every <code>mvnw</code> invocation failed before touching the project.</p>
+            <div class="fix"><span class="lbl">fix</span>&nbsp; overrode the variable per-session for build commands rather than touching the machine's system configuration.</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-head"><span class="idx">03</span> runtime &middot; postgresql</div>
+            <h4>Combined search broke the entire alumni list, not just skill filtering</h4>
+            <p>After adding the batch + department + skill search, every visit to <code>/alumni</code> &mdash; including the default page right after login &mdash; returned a 500.</p>
+            <div class="trace">ERROR: function lower(bytea) does not exist</div>
+            <p>The JPQL used <code>LOWER(CONCAT('%', :skill, '%'))</code>. With no skill filter applied, <code>:skill</code> bound as <code>null</code>; PostgreSQL couldn't infer that parameter's type at prepare-time and resolved it against the newly-added <code>photo bytea</code> column instead.</p>
+            <div class="fix"><span class="lbl">fix</span>&nbsp; build the lower-cased <code>%pattern%</code> string in Java and bind it as a concrete, typed <code>String</code> &mdash; no <code>CONCAT</code>/<code>LOWER</code> ever touches an ambiguous null parameter.</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-head"><span class="idx">04</span> database &middot; migration</div>
+            <h4>Adding a NOT NULL column to a live table</h4>
+            <p><code>User.approved</code> was added as <code>@Column(nullable = false)</code> against a database that already held seeded <code>admin</code>/<code>user</code> rows. Hibernate's <code>ddl-auto=update</code> emits a plain <code>ALTER TABLE ... ADD COLUMN ... NOT NULL</code> with no default, which Postgres rejects outright against existing rows.</p>
+            <div class="fix"><span class="lbl">fix</span>&nbsp; manually backfilled via psql (<code>ADD COLUMN approved boolean NOT NULL DEFAULT true</code>) before the next application restart.</div>
+          </div>
+          <div class="log-entry">
+            <div class="log-head"><span class="idx">05</span> tooling &middot; ide</div>
+            <h4>Two unrelated projects, one folder</h4>
+            <p>The working directory also contained a pre-existing, unrelated starter (<code>backend/</code> + <code>frontend/</code>, package <code>com.technoboost</code>). Opening the wrong root in IntelliJ landed on <code>BackendApplication.java</code> instead of <code>AlumniPlatformApplication.java</code>, with no error to signal the mix-up.</p>
+            <div class="fix"><span class="lbl">fix</span>&nbsp; confirmed the correct project via IntelliJ's Search Everywhere rather than trusting the visible file tree.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="setup">
+        <div class="num-head"><span class="n">09</span><h2>Running the project</h2></div>
+        <ol class="plain">
+          <li>Install <strong>JDK 25</strong> and have <strong>PostgreSQL</strong> running locally with a database named <code class="mono">alumni_db</code>.</li>
+          <li>Set the real database credentials in <code class="mono">src/main/resources/application.properties</code> (<code class="mono">spring.datasource.username</code> / <code class="mono">password</code>).</li>
+          <li>From the project root: <code class="mono">./mvnw spring-boot:run</code> &mdash; or open the folder in IntelliJ, set the Project SDK to JDK 25, enable annotation processing (Settings &rarr; Build, Execution, Deployment &rarr; Compiler &rarr; Annotation Processors) with the Lombok plugin installed, and run <code class="mono">AlumniPlatformApplication</code>.</li>
+          <li>On first boot, <code class="mono">DataInitializer</code> seeds two accounts, 12 alumni, 2 events, and 2 job postings &mdash; but only if those tables are still empty.</li>
+          <li>Visit <code class="mono">http://localhost:8080/login</code>.</li>
+        </ol>
+        <div class="callout"><b>Default logins</b> &mdash; admin: <code class="mono">admin@alumni.com</code> / <code class="mono">admin123</code>. Alumni: <code class="mono">user@alumni.com</code> / <code class="mono">user123</code>. Both are pre-approved by the seed data.</div>
+      </section>
+
+      <section id="roadmap">
+        <div class="num-head"><span class="n">10</span><h2>Limitations &amp; roadmap</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Area</th><th>Current state</th><th>Next step</th></tr></thead>
+            <tbody>
+              <tr><td>Automated tests</td><td>None &mdash; verified manually via curl and live runs</td><td>Unit tests on services, MockMvc on controllers</td></tr>
+              <tr><td>Notifications</td><td>Approval &amp; registration events are silent</td><td>Email on approval / new registration</td></tr>
+              <tr><td>Photo storage</td><td>Raw bytes inline in Postgres (<code>bytea</code>)</td><td>Object storage (S3-compatible) behind a CDN, if scaling</td></tr>
+              <tr><td>Templates</td><td>Navbar &amp; footer duplicated across all 15 pages</td><td>Extract to a Thymeleaf layout fragment</td></tr>
+              <tr><td>Roles</td><td>Flat ADMIN / ALUMNI model</td><td>Optional moderator tier for events/jobs only</td></tr>
+              <tr><td>Pagination</td><td>Only the alumni directory is paginated</td><td>Extend to Events and Job Board lists</td></tr>
+              <tr><td>Auth hardening</td><td>No lockout or rate limiting on failed logins</td><td>Add attempt throttling</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="report-footer">
+        <span>Alumni Platform &middot; com.alumni.platform &middot; university coursework project</span>
+        <span>Generated report &middot; reflects the codebase at time of writing</span>
+      </footer>
+
+    </main>
+  </div>
+</div>

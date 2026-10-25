@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Approvals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/theme.css}" rel="stylesheet">
+    <noscript><style>#page-content{display:block !important} #skeleton-loader{display:none !important}</style></noscript>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/alumni}">Alumni Platform</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni}">Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/alumni/new}">Add Alumni</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/alumni/profile}">My Profile</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/alumni/mentors}">Mentors</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/events}">Events</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/jobs}">Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ALUMNI')"><a class="nav-link" th:href="@{/recommendations}">Recommended Jobs</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link active" th:href="@{/admin/pending-users}">Pending Approvals</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link" th:href="@{/admin/dashboard}">Dashboard</a></li>
+            </ul>
+            <form th:action="@{/logout}" method="post" class="d-flex">
+                <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Pending Approvals</h2>
+
+    <div id="skeleton-loader" class="skeleton-loader">
+        <div class="skeleton-row" th:each="i : ${#numbers.sequence(1, 6)}"></div>
+    </div>
+
+    <div id="page-content" class="d-none">
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${pendingUsers}">
+                <td th:text="${u.email}"></td>
+                <td th:text="${u.role}"></td>
+                <td>
+                    <form th:action="@{/admin/users/{id}/approve(id=${u.id})}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-primary">Approve</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(pendingUsers)}">
+                <td colspan="3" class="text-center">No pending approvals.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <nav th:if="${totalPages > 1}" aria-label="Pending approvals pagination">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/pending-users(page=${currentPage - 1})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/pending-users(page=${i})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/pending-users(page=${currentPage + 1})}">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<footer class="site-footer text-center py-3 mt-5">
+    <div class="container">
+        <small>&copy; 2026 Alumni Platform. All rights reserved.</small>
+    </div>
+</footer>
+<script th:src="@{/js/skeleton-loader.js}"></script>
+</body>
+</html>
